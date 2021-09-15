@@ -11,7 +11,7 @@ $ git clone https://github.com/Swapnil0506/Url_Shortener.git
 </pre>
 Go to the Project(master branch)-<br/>
 <pre>
-$ cd Fitness_Club
+$ cd Url_Shortener
 </pre>
 Install all the requirements -<br/>
 <pre>
