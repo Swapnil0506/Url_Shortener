@@ -26,13 +26,24 @@
     <h1 style="text-align: center;">URL Shortener</h1>
     <form id="post-form">
       {% csrf_token %}
-    <input type="text" name="link" id="link" placeholder="Enter URL here">
+    <input type="url" name="link" minlength="1" id="link" placeholder="Enter URL here">
     <div class="buttons">
       <button type="submit" id="shorten">Shorten</button>
     </div>
     </form>
     
-    <section id="section"><h2></h2></section>
+    <section id="section"><h2></h2>
+      <!-- <br> -->
+      <div class="text-center">
+      <a target="_blank" id="wa" href="" class="whatsapp-btn" title="Share to whatsapp" style="display: none;"><img src="https://icons.iconarchive.com/icons/tinylab/android-lollipop-apps/128/Whatsapp-icon.png" height="26px" alt="whatsapp" width="26px"></a>&nbsp;&nbsp;&nbsp;
+      <a href="" class="facebook-btn" id="fb" target="_blank" title="Share to Facebook" style="display: none;"><img src="https://icons.iconarchive.com/icons/yootheme/social-bookmark/128/social-facebook-button-blue-icon.png" alt="facebook" height="20px" width="20px"></a>&nbsp;&nbsp;&nbsp;
+      <a href="" class="twitter-btn" id="tw" target="_blank" title="Share to twitter" style="display: none;"><img src="https://icons.iconarchive.com/icons/xenatt/minimalism/128/App-Twitter-icon.png" alt="twitter" height="24px" width="24px"></a>&nbsp;&nbsp;&nbsp;
+      <a href="" class="pinterest-btn" id="pt" target="_blank" title="Share to Pinterest" style="display: none;"><img src="https://icons.iconarchive.com/icons/uiconstock/socialmedia/128/Pinterest-icon.png" height="21px" width="21px" alt="pinterest"></a>&nbsp;&nbsp;&nbsp;
+      <a href="" class="linkedin-btn" id="lnkd" target="_blank" title="Share to Linkedin" style="display: none;"><img src="https://icons.iconarchive.com/icons/uiconstock/socialmedia/128/Linkedin-icon.png" height="21px" width="21px" alt="linkedin"></a>&nbsp;&nbsp;&nbsp;
+      <a type="button" onclick="Copy();" style="display: none;" class="copy" id="copy"><i class="fa fa-copy"></i></a>
+      <!-- <a href="" class="visit" id="visit" style="display: none;"><i class="fa fa-arrow-right-from-bracket"></i></a> -->
+      </div>
+    </section>
       
   </main>
 
@@ -40,6 +51,71 @@
     
     
     
+    <script type="text/javascript">
+      var postUrl;
+      $(document).on('submit','#post-form',function(e){
+        e.preventDefault();
+        if($('#link').val().length===0){
+          return;
+        }
+        $.ajax({
+          type:'POST',
+          url:'/create',
+          data:{
+            link:$('#link').val(),
+            csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
+          },
+          
+          success: function(data){
+            $('h2').html("https://tiny123.herokuapp.com/"+data)
+            var str= "https://tiny123.herokuapp.com/"+data;
+            postUrl= encodeURI("https://tiny123.herokuapp.com/"+data);
+            const postTitle= encodeURI("Hello everyone, check out this link.");
+            if(window.location.href==="http://127.0.0.1:8000/"){
+              document.getElementById('wa').style.display= "block";
+              document.getElementById('fb').style.display= "block";
+              document.getElementById('tw').style.display= "block";
+              document.getElementById('pt').style.display= "block";
+              document.getElementById('lnkd').style.display= "block";
+              document.getElementById('copy').style.display= "block";
+              document.getElementById('visit').style.display= "block";
+            }
+            const facebookBtn= document.querySelector('.facebook-btn');
+            const whatsappBtn= document.querySelector('.whatsapp-btn');
+            const twitterBtn= document.querySelector('.twitter-btn');
+            const linkedinBtn= document.querySelector('.linkedin-btn');
+            const pinterestBtn= document.querySelector('.pinterest-btn');
+            const visit= document.querySelector('.visit');
+            console.log("if works")
+
+            // if(window.location.href===""){
+            //   console.log("hello")
+            //   document.getElementById('wa').style.display= "block";
+            //   document.getElementById('fb').style.display= "block";
+            //   document.getElementById('tw').style.display= "block";
+            //   document.getElementById('pt').style.display= "block";
+            //   document.getElementById('lnkd').style.display= "block";
+            //   console.log("hello")
+            // }
+            facebookBtn.setAttribute("href", `https://www.facebook.com/sharer.php?u=${postUrl}`);
+            whatsappBtn.setAttribute("href", `https://api.whatsapp.com/send?text=${postUrl}`);
+            twitterBtn.setAttribute("href", `https://twitter.com/share?url=${postUrl}&text=${postTitle}`);
+            linkedinBtn.setAttribute("href", `https://www.linkedin.com/shareArticle?url=${postUrl}&title=${postTitle}`);
+            pinterestBtn.setAttribute("href", `https://pinterest.com/pin/create/bookmarklet/?url=${postUrl}&description=${postTitle}`);
+            visit.setAttribute("href", `${postUrl}`);
+          }
+        });
+      });
+
+      function Copy() 
+            {
+                    console.log("copy works")
+                    // newUrl = window.location.href;
+                    navigator.clipboard.writeText(postUrl);
+                    // alert("URL copied to clipboard");
+            }
+    </script>
+
     <style>
         *,
 *::before,
@@ -111,28 +187,10 @@ button:hover{
 }
 
 section {
-  min-height: 120px;
+  min-height: 200px;
   text-align: center;
   background-color: white;
 }
 
     </style>
 
-
-<script type="text/javascript">
-  $(document).on('submit','#post-form',function(e){
-    e.preventDefault();
-
-    $.ajax({
-      type:'POST',
-      url:'/create',
-      data:{
-        link:$('#link').val(),
-        csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
-      },
-      success: function(data){
-        $('h2').html("https://tiny123.herokuapp.com/"+data)
-      }
-    });
-  });
-</script>
