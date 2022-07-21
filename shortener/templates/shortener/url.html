@@ -71,7 +71,7 @@
             var str= "https://tiny123.herokuapp.com/"+data;
             postUrl= encodeURI("https://tiny123.herokuapp.com/"+data);
             const postTitle= encodeURI("Hello everyone, check out this link.");
-            if(window.location.href==="http://127.0.0.1:8000/"){
+            if(window.location.href!=""){
               document.getElementById('wa').style.display= "block";
               document.getElementById('fb').style.display= "block";
               document.getElementById('tw').style.display= "block";
